@@ -19,15 +19,41 @@ describe('.then()', () => {
   });
 
   context('when promise rejected', () => {
-    it('should trigger errorCallback and callback will be skipped', async () => {
+    it('should not trigger callback', async () => {
+      const callback = sinon.stub();
+      const promise = getRejectPromise()
+        .then(callback);
+      try {
+        await promise;
+      } catch (e) {
+      }
+      expect(callback).to.have.callCount(0);
+    });
+  });
+});
+
+describe('.catch()', () => {
+  context('when promise resolved', () => {
+    it('should trigger callback once', async () => {
+      const callback = sinon.stub();
+      const promise = getResolvePromise()
+        .catch(callback);
+      await promise;
+      expect(callback).to.have.callCount(0);
+    });
+  });
+
+  context('when promise rejected', () => {
+    it('should not trigger callback', async () => {
       const callback = sinon.stub();
       const errorCallback = sinon.stub();
       const promise = getRejectPromise()
-        .then(callback)
-        .catch(errorCallback);
-      await promise;
-      expect(callback).to.have.callCount(0);
-      expect(errorCallback).to.have.been.calledOnce;
+        .catch(callback);
+      try {
+        await promise;
+      } catch (e) {
+      }
+      expect(callback).to.have.been.calledOnce;
     });
   });
 });
