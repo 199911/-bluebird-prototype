@@ -10,7 +10,7 @@ const { getResolvePromise, getRejectPromise } = require('./service.js');
 describe('.then()', () => {
   context('when promise resolved', () => {
     it('should trigger callback once', async () => {
-      const callback = sinon.stub();
+      const callback = sinon.spy();
       const promise = getResolvePromise()
         .then(callback);
       await promise;
@@ -20,7 +20,7 @@ describe('.then()', () => {
 
   context('when promise rejected', () => {
     it('should not trigger callback', async () => {
-      const callback = sinon.stub();
+      const callback = sinon.spy();
       const promise = getRejectPromise()
         .then(callback);
       try {
@@ -35,7 +35,7 @@ describe('.then()', () => {
 describe('.catch()', () => {
   context('when promise resolved', () => {
     it('should trigger callback once', async () => {
-      const callback = sinon.stub();
+      const callback = sinon.spy();
       const promise = getResolvePromise()
         .catch(callback);
       await promise;
@@ -45,8 +45,8 @@ describe('.catch()', () => {
 
   context('when promise rejected', () => {
     it('should not trigger callback', async () => {
-      const callback = sinon.stub();
-      const errorCallback = sinon.stub();
+      const callback = sinon.spy();
+      const errorCallback = sinon.spy();
       const promise = getRejectPromise()
         .catch(callback);
       try {
@@ -60,10 +60,10 @@ describe('.catch()', () => {
 
 describe('.then().catch().then().catch()', () => {
   context('when promise resolved', () => {
-    const firstCallback = sinon.stub();
-    const secondCallback = sinon.stub();
-    const firstErrorCallback = sinon.stub();
-    const secondErrorCallback = sinon.stub();
+    const firstCallback = sinon.spy();
+    const secondCallback = sinon.spy();
+    const firstErrorCallback = sinon.spy();
+    const secondErrorCallback = sinon.spy();
     let main;
 
     before('set up promise', async () => {
