@@ -1,6 +1,6 @@
 const Promise = require('bluebird');
 
-const getResolvePromise = value => Promise.resolve(value);
-const getRejectPromise = value => Promise.reject(value);
+const getResolvePromise = () => Promise.resolve('resolved');
+const getRejectPromise = () => Promise.reject(new Error('rejected'));
 
 module.exports = { getResolvePromise, getRejectPromise };
