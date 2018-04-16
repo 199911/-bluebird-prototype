@@ -59,21 +59,25 @@ describe('.catch()', () => {
 });
 
 describe('.then().catch().then().catch()', () => {
-  let promise;
   context('when promise resolved', () => {
     const firstCallback = sinon.stub();
     const secondCallback = sinon.stub();
     const firstErrorCallback = sinon.stub();
     const secondErrorCallback = sinon.stub();
+    let main;
+
     before('set up promise', async () => {
-      promise = getResolvePromise()
-        .then(firstCallback)
-        .catch(firstErrorCallback)
-        .then(secondCallback)
-        .catch(secondErrorCallback);
-      await promise;
+      main = () => {
+        return getResolvePromise()
+          .then(firstCallback)
+          .catch(firstErrorCallback)
+          .then(secondCallback)
+          .catch(secondErrorCallback);
+      }
     });
-    it('should trigger first and second callbacks', () => {
+
+    it('should trigger first and second callbacks', async () => {
+      await main();
       expect(firstCallback).to.have.been.calledOnce;
       expect(secondCallback).to.have.been.calledOnce;
     });
