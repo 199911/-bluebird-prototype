@@ -59,25 +59,28 @@ describe('.catch()', () => {
 });
 
 describe('.then().catch().then().catch()', () => {
+  let getPromise;
+  before(() => {
+    getPromise = (headPromise, callbacks) => {
+      const [firstCallback, secondCallback, firstErrorCallback, secondErrorCallback] = callbacks;
+      return headPromise
+        .then(firstCallback)
+        .catch(firstErrorCallback)
+        .then(secondCallback)
+        .catch(secondErrorCallback);
+    };
+  });
   context('when promise resolved', () => {
-    const firstCallback = sinon.spy();
-    const secondCallback = sinon.spy();
-    const firstErrorCallback = sinon.spy();
-    const secondErrorCallback = sinon.spy();
-    let main;
-
+    let callbacks;
     before('set up promise', async () => {
-      main = () => {
-        return getResolvePromise()
-          .then(firstCallback)
-          .catch(firstErrorCallback)
-          .then(secondCallback)
-          .catch(secondErrorCallback);
+      callbacks = [];
+      for (let i = 0; i < 4; ++i) {
+        callbacks.push(sinon.spy());
       }
     });
-
     it('should trigger first and second callbacks', async () => {
-      await main();
+      const [firstCallback, secondCallback, firstErrorCallback, secondErrorCallback] = callbacks;
+      await getPromise(getResolvePromise(), callbacks);
       expect(firstCallback).to.have.been.calledOnce;
       expect(secondCallback).to.have.been.calledOnce;
     });
